@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						   http://www.springframework.org/schema/beans/spring-beans.xsd
+						   http://www.springframework.org/schema/context
+						   http://www.springframework.org/schema/context/spring-context.xsd
+       					   http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop.xsd
+            			   http://www.springframework.org/schema/tx
+    				       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--加载外部依赖项-->
+    <context:property-placeholder location="jdbc.properties" />
+    <!--配置数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc_driver}" />
+        <property name="jdbcUrl" value="${jdbc_url}" />
+        <property name="user" value="${jdbc_user}" />
+        <property name="password" value="${jdbc_password}" />
+    </bean>
+
+  <!--  &lt;!&ndash;注入dao&ndash;&gt;
+    <bean id="accountDao" class="com.zte.spring.dao.impl.AccountDaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    &lt;!&ndash;注入service&ndash;&gt;
+    <bean id="accountService" class="com.zte.spring.service.impl.AccountServiceImpl">
+        <property name="accountDao" ref="accountDao" ></property>
+    </bean>-->
+
+    <!--配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <context:component-scan base-package="com.zte.spring" />
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+<!--    &lt;!&ndash;配置事务通知&ndash;&gt;
+    <tx:advice id="txAdvice">
+        <tx:attributes>
+            &lt;!&ndash;具体需要增强的方法&ndash;&gt;
+            <tx:method name="transfer"/>
+        </tx:attributes>
+    </tx:advice>
+    &lt;!&ndash;配置切点和切面&ndash;&gt;
+    <aop:config>
+        <aop:pointcut expression="bean(*Service)" id="mypointcut" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="mypointcut" />
+    </aop:config>
+    &lt;!&ndash;扫包&ndash;&gt;
+    <context:component-scan base-package="com.zte.spring" />
+    <tx:annotation-driven transaction-manager="transactionManager" />-->
+</beans>
